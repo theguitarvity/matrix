@@ -45,14 +45,65 @@ public class Decode {
 	public static final int NOP = 0xFF;
 	private ArrayList<Long> instructions;
 	private RegisterFile registers;
-	
+	private int[] reg;
 	
 	public Decode(ArrayList<Long> inst) {
 		this.instructions = inst;
+		this.registers = new RegisterFile();
+		this.reg = new int[32];
+		for(int i = 0; i<this.reg.length; i ++)
+			this.reg[i] = 0x00;
 		
 	}
 	private void decode() {
-		long inst = instructions.get(RegisterName.INSTRUCTION);
+		//long inst = instructions.get(RegisterName.INSTRUCTION);
+		for(long inst : instructions) {
+			long opcode = ((inst*OPCODE_MASK)>>OPCODE_SHIFT);
+			switch((int)opcode) {
+				case ARITH_OP_CODE:
+					long rd = (inst&RD_MASK)>>RD_SHIFT;
+					long rs = (inst&RS_MASK)>>RS_SHIFT;
+					long rt = (inst&RT_MASK)>>RT_SHIFT;
+					long funct = (inst&FUNCT_MASK)>>FUNCT_SHIFT;
+					long shamt = (inst&SHAMT_MASK)>>SHAMT_SHIFT;
+					
+					
+					
+					switch((int)funct) {
+						case ADD_FUNCT:
+							reg[(int)rd] = reg[(int) rs]+ reg[(int)rt];
+							break;
+						case SUB_FUNCT:
+							reg[(int)rd] = reg[(int) rs]+ reg[(int)rt];
+							break;
+						case OR_FUNCT:
+							reg[(int)rd] = reg[(int) rs]| reg[(int)rt];
+							break;
+						case AND_FUNCT:
+							reg[(int)rd] = reg[(int) rs] & reg[(int)rt];
+							break;
+						case NOR_FUNCT:
+							reg[(int)rd] = ~(reg[(int) rs] | reg[(int)rt]);
+							break;
+						case SLT_FUNCT:
+							reg[(int)rd] = (reg[(int) rs] < reg[(int)rt])?1:0;
+							
+					}
+					break;
+				case ADDI:
+					rt = (inst&RT_MASK)>>RT_SHIFT;
+					rs = (inst&RS_MASK)>>RS_SHIFT;
+					long immediate = (inst&IMMEDIATE_MASK)>>IMMEDIATE_SHIFT;
+					reg[(int)rt] = (int) (reg[(int)rs] + immediate); 
+					break;
+					
+					
+			}
+			
+		}
+	}
+	public int[] regs() {
+		return reg;
 	}
 
 }

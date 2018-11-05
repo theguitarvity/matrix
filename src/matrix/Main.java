@@ -6,6 +6,8 @@ public class Main {
 	public Main(String[] args) throws IOException{
 		InstructionMemory im  = new InstructionMemory(args[0]);
 		Decode dec = new Decode(im.data());
+		for(int i = 0; i < dec.regs().length; i++)
+			System.out.println(dec.regs()[i]);
 		
 		
 	}
