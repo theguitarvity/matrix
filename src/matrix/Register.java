@@ -2,7 +2,7 @@ package matrix;
 
 public class Register {
 	private long value = 0;
-	private long newValue = -1;
+	protected long newValue = -1;
 	
 	public Register() {
 		this(0);

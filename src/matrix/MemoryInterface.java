@@ -1,10 +1,10 @@
 package matrix;
 
-public interface MemoryInterface<T, I> {
-	public void push(T item);
-	public T pop();
+public interface MemoryInterface<Long> {
+	public void push(Long item);
+	public Long pop();
 	public void peek();
-	public T get(I index);
+	public Long get(int index);
 	public int size();
 
 }

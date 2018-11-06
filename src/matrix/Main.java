@@ -4,6 +4,9 @@ import java.io.IOException;
 
 public class Main {
 	public Main(String[] args) throws IOException{
+		InstructionMemory im  = new InstructionMemory(args[0]);
+		Decode dec = new Decode(im.data());
+		
 		
 	}
 	private void run() {
