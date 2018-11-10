@@ -103,6 +103,26 @@ public class Decode {
 					immediate = (inst&IMMEDIATE_MASK)>>IMMEDIATE_SHIFT;
 					reg[(int)rt] = (int) (reg[(int)rs] & immediate); 
 					break;
+				case ORI:
+					rt = (inst&RT_MASK)>>RT_SHIFT;
+					rs = (inst&RS_MASK)>>RS_SHIFT;
+					immediate = (inst&IMMEDIATE_MASK)>>IMMEDIATE_SHIFT;
+					reg[(int)rt] = (int) (reg[(int)rs] | immediate); 
+					break;
+				case SLTI:
+					rt = (inst&RT_MASK)>>RT_SHIFT;
+					rs = (inst&RS_MASK)>>RS_SHIFT;
+					immediate = (inst&IMMEDIATE_MASK)>>IMMEDIATE_SHIFT;
+					reg[(int)rt] = (reg[(int)rs] <  immediate)?1:0;
+					break;
+				/*case BEQ:
+					rt = (inst&RT_MASK)>>RT_SHIFT;
+					rs = (inst&RS_MASK)>>RS_SHIFT;
+					immediate = (inst&IMMEDIATE_MASK)>>IMMEDIATE_SHIFT;
+					if(reg[(int)rt]==reg[(int)rs]) {
+						
+					}*/
+					
 					
 					
 			}
