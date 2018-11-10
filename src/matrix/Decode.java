@@ -55,9 +55,18 @@ public class Decode {
 			this.reg[i] = 0x00;
 		
 	}
+	/**
+	 * Metodo responsavel pela decodificação da instrução e execução da mesma
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * */
 	public void decode() {
 		//long inst = instructions.get(RegisterName.INSTRUCTION);
-		for(long inst : instructions) {
+		for(int i = 0; i<instructions.size(); i++) {
+			long inst = instructions.get(i);
 			long opcode = ((inst&OPCODE_MASK)>>OPCODE_SHIFT);
 			//System.out.printf("%x\n",opcode);
 			switch((int)opcode) {
@@ -128,6 +137,7 @@ public class Decode {
 			}
 			
 		}
+		
 	}
 	public long[] regs() {
 		return reg;
