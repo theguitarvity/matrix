@@ -45,20 +45,21 @@ public class Decode {
 	public static final int NOP = 0xFF;
 	private ArrayList<Long> instructions;
 	private RegisterFile registers;
-	private int[] reg;
+	private long[] reg;
 	
 	public Decode(ArrayList<Long> inst) {
 		this.instructions = inst;
 		this.registers = new RegisterFile();
-		this.reg = new int[32];
+		this.reg = new long[32];
 		for(int i = 0; i<this.reg.length; i ++)
 			this.reg[i] = 0x00;
 		
 	}
-	private void decode() {
+	public void decode() {
 		//long inst = instructions.get(RegisterName.INSTRUCTION);
 		for(long inst : instructions) {
-			long opcode = ((inst*OPCODE_MASK)>>OPCODE_SHIFT);
+			long opcode = ((inst&OPCODE_MASK)>>OPCODE_SHIFT);
+			//System.out.printf("%x\n",opcode);
 			switch((int)opcode) {
 				case ARITH_OP_CODE:
 					long rd = (inst&RD_MASK)>>RD_SHIFT;
@@ -96,13 +97,19 @@ public class Decode {
 					long immediate = (inst&IMMEDIATE_MASK)>>IMMEDIATE_SHIFT;
 					reg[(int)rt] = (int) (reg[(int)rs] + immediate); 
 					break;
+				case ANDI:
+					rt = (inst&RT_MASK)>>RT_SHIFT;
+					rs = (inst&RS_MASK)>>RS_SHIFT;
+					immediate = (inst&IMMEDIATE_MASK)>>IMMEDIATE_SHIFT;
+					reg[(int)rt] = (int) (reg[(int)rs] & immediate); 
+					break;
 					
 					
 			}
 			
 		}
 	}
-	public int[] regs() {
+	public long[] regs() {
 		return reg;
 	}
 
