@@ -51,12 +51,15 @@ public class Decode {
 	
 	public static final int NOP = 0xFF;
 	private ArrayList<Long> instructions;
+	private ArrayList<Long> memory;
 	private RegisterFile registers;
 	private long[] reg;
+	private long[] mem;
 	private ALU alu;
 	
-	public Decode(ArrayList<Long> inst) {
+	public Decode(ArrayList<Long> inst, ArrayList<Long> mem) {
 		this.instructions = inst;
+		this.memory = mem;
 		this.registers = new RegisterFile();
 		this.alu = new ALU();
 		this.reg = new long[32];

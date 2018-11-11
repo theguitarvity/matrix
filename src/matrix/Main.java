@@ -6,7 +6,7 @@ public class Main {
 	public Main(String[] args) throws IOException{
 		InstructionMemory im  = new InstructionMemory(args[0]);
 		DataMemory dm = new DataMemory(args[1]);
-		Decode dec = new Decode(im.data());
+		Decode dec = new Decode(im.data(),dm.data());
 		dec.decode();
 		for(int i = 0; i < dec.regs().length; i++)
 			System.out.printf("R%d:%d\n",i,dec.regs()[i]);
