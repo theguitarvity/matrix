@@ -8,8 +8,6 @@ public class DataMemory {
 	private ArrayList<Long> memory = new ArrayList<Long>();
 	private int size;
 	
-
-	
 	public ArrayList<Long> data(){
 		return this.memory;
 	}

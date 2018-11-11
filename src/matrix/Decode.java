@@ -32,12 +32,17 @@ public class Decode {
 	private static final int SUB_FUNCT = 0x22;
 	private static final int ORI = 0xD;
 	private static final int XORI = 0xE;
+	private static final int MULT_FUNCT = 0x18;
+	private static final int DIV_FUNCT = 0x1A;
+	private static final int MHI_FUNCT = 0x11;
+	private static final int MLO_FUNCT = 0x12;
 	
 	
 	private static final int SLTI = 0xA;
 	private static final int AND_FUNCT = 0x24;
 	private static final int OR_FUNCT = 0x25;
 	private static final int ADDI = 0x8;
+	private static final int ADDIU = 0x9;
 	private static final int ANDI = 0xC;
 	private static final int BEQ = 0x4;
 	private static final int BNE = 0x5;
@@ -116,6 +121,13 @@ public class Decode {
 						case SRL_FUNCT:
 							reg[(int)rd] = alu.srl(reg[(int)rt], shamt);
 							break;
+						case MULT_FUNCT:
+							alu.mult(reg[(int)rs], reg[(int)rt]);
+							break;
+						case DIV_FUNCT:
+							alu.div(reg[(int)rs], reg[(int)rt]);
+							break;
+						
 						
 							
 						
@@ -127,6 +139,12 @@ public class Decode {
 					rs = (inst&RS_MASK)>>RS_SHIFT;
 					long immediate = (inst&IMMEDIATE_MASK)>>IMMEDIATE_SHIFT;
 					reg[(int)rt] = (int) (reg[(int)rs] + immediate); 
+					break;
+				case ADDIU:
+					rt = (inst&RT_MASK)>>RT_SHIFT;
+					rs = (inst&RS_MASK)>>RS_SHIFT;
+					immediate = (inst&IMMEDIATE_MASK)>>IMMEDIATE_SHIFT;
+					reg[(int)rt] = (int) (reg[(int)rs] + getUnsigned(immediate)); 
 					break;
 				case ANDI:
 					rt = (inst&RT_MASK)>>RT_SHIFT;
@@ -146,19 +164,36 @@ public class Decode {
 					immediate = (inst&IMMEDIATE_MASK)>>IMMEDIATE_SHIFT;
 					reg[(int)rt] = (reg[(int)rs] <  immediate)?1:0;
 					break;
-				/*case BEQ:
+				case BEQ:
 					rt = (inst&RT_MASK)>>RT_SHIFT;
 					rs = (inst&RS_MASK)>>RS_SHIFT;
 					immediate = (inst&IMMEDIATE_MASK)>>IMMEDIATE_SHIFT;
 					if(reg[(int)rt]==reg[(int)rs]) {
-						
-					}*/
+						i = (int) (i+immediate);
+					}
+					break;
+				case BNE: 
+					rt = (inst&RT_MASK)>>RT_SHIFT;
+					rs = (inst&RS_MASK)>>RS_SHIFT;
+					immediate = (inst&IMMEDIATE_MASK)>>IMMEDIATE_SHIFT;
+					if(reg[(int)rt]!=reg[(int)rs]) {
+						i = (int) (i+immediate);
+					}
+					break;
+				
 					
 					
 					
 			}
 			
 		}
+		
+	}
+	private long getUnsigned(long immediate) {
+		// TODO Auto-generated method stub
+		if(immediate>=0)
+			return immediate;
+		return Integer.toUnsignedLong((int) immediate);
 		
 	}
 	public long[] regs() {

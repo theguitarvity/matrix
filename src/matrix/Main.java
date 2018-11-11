@@ -12,8 +12,8 @@ public class Main {
 			System.out.printf("R%d:%d\n",i,dec.regs()[i]);
 	
 		System.out.println("************MEM************");
-		for(Long i : dm.data())
-			System.out.printf("0x%08x\n",i);
+		//for(Long i : dm.data())
+			//System.out.printf("0x%08x\n",i);
 			
 			
 		
