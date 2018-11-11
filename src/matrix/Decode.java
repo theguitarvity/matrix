@@ -17,7 +17,7 @@ public class Decode {
 	private static final int FUNCT_MASK = 0x3F;
 	private static final int FUNCT_SHIFT = 0;
 	private static final int ADDRESS_MASK = 0x3FFFFFF;
-	private static final int ADDRESS_SHIFT = 0;
+	private static final int ADDRESS_SHIFT = 26;
 	private static final int IMMEDIATE_MASK = 0xFFFF;
 	private static final int IMMEDIATE_SHIFT = 0;
 	
@@ -49,6 +49,7 @@ public class Decode {
 	private static final int NOR_FUNCT = 0x27;
 	private static final int SLT_FUNCT = 0x2a;
 	private static final int J = 0x2;
+	private static final int JAL = 0x3;
 	private static final int JR_FUNCT = 0x8;
 	private static final int LW = 0x23;
 	private static final int SW = 0x2B;
@@ -82,7 +83,9 @@ public class Decode {
 	 * */
 	public void decode() {
 		//long inst = instructions.get(RegisterName.INSTRUCTION);
-		for(int i = 0; i<instructions.size(); i++) {
+		int i = 0;
+		while(i<instructions.size()) {
+			
 			long inst = instructions.get(i);
 			long opcode = ((inst&OPCODE_MASK)>>OPCODE_SHIFT);
 			//System.out.printf("%x\n",opcode);
@@ -127,7 +130,9 @@ public class Decode {
 						case DIV_FUNCT:
 							alu.div(reg[(int)rs], reg[(int)rt]);
 							break;
-						
+						case JR_FUNCT:
+							i = (int) (i+reg[31]);
+							break;
 						
 							
 						
@@ -180,13 +185,26 @@ public class Decode {
 						i = (int) (i+immediate);
 					}
 					break;
+				case J:
+					long addrs = (inst&ADDRESS_MASK)>>ADDRESS_SHIFT;
+					i = (int)(i+addrs);
+					break;
+				case JAL:
+					addrs = (inst&ADDRESS_MASK)>>ADDRESS_SHIFT;
+					reg[31] = i+1;
+					i = (int)(i+addrs);
+					break;
+					
 				
 					
 					
 					
 			}
+			i++;
 			
 		}
+		//for(int i = 0; i<instructions.size(); i++) {
+		
 		
 	}
 	private long getUnsigned(long immediate) {
