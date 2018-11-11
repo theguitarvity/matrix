@@ -24,9 +24,16 @@ public class Decode {
 	// functions and opcodes
 	
 	private static final int ARITH_OP_CODE = 0;
+	private static final int SLL_FUNCT = 0x00;
+	private static final int SRL_FUNCT = 0x02;
+	private static final int SRA_FUNCT = 0x03;
 	private static final int ADD_FUNCT = 0x20;
+	
 	private static final int SUB_FUNCT = 0x22;
 	private static final int ORI = 0xD;
+	private static final int XORI = 0xE;
+	
+	
 	private static final int SLTI = 0xA;
 	private static final int AND_FUNCT = 0x24;
 	private static final int OR_FUNCT = 0x25;
@@ -46,10 +53,12 @@ public class Decode {
 	private ArrayList<Long> instructions;
 	private RegisterFile registers;
 	private long[] reg;
+	private ALU alu;
 	
 	public Decode(ArrayList<Long> inst) {
 		this.instructions = inst;
 		this.registers = new RegisterFile();
+		this.alu = new ALU();
 		this.reg = new long[32];
 		for(int i = 0; i<this.reg.length; i ++)
 			this.reg[i] = 0x00;
@@ -81,22 +90,32 @@ public class Decode {
 					
 					switch((int)funct) {
 						case ADD_FUNCT:
-							reg[(int)rd] = reg[(int) rs]+ reg[(int)rt];
+							reg[(int)rd] = alu.add(reg[(int) rs], reg[(int)rt]);
 							break;
 						case SUB_FUNCT:
-							reg[(int)rd] = reg[(int) rs]+ reg[(int)rt];
+							reg[(int)rd] = alu.sub(reg[(int) rs], reg[(int)rt]);
 							break;
 						case OR_FUNCT:
-							reg[(int)rd] = reg[(int) rs]| reg[(int)rt];
+							reg[(int)rd] = alu.or(reg[(int) rs], reg[(int)rt]);
 							break;
 						case AND_FUNCT:
-							reg[(int)rd] = reg[(int) rs] & reg[(int)rt];
+							reg[(int)rd] = alu.and(reg[(int) rs] , reg[(int)rt]);
 							break;
 						case NOR_FUNCT:
-							reg[(int)rd] = ~(reg[(int) rs] | reg[(int)rt]);
+							reg[(int)rd] = ~(alu.or(reg[(int) rs] , reg[(int)rt]));
 							break;
 						case SLT_FUNCT:
 							reg[(int)rd] = (reg[(int) rs] < reg[(int)rt])?1:0;
+							break;
+						case SLL_FUNCT:
+							reg[(int)rd] = alu.sll(reg[(int)rt], shamt);
+							break;
+						case SRL_FUNCT:
+							reg[(int)rd] = alu.srl(reg[(int)rt], shamt);
+							break;
+						
+							
+						
 							
 					}
 					break;
